@@ -58,10 +58,10 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.95.82.252.141 }}
-          username: ${{ secrets.oreangepi }}
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: orangepi
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.2222 }}
+          port: 2222
           script: |
             cd /home/orangepi/support-bot
 
