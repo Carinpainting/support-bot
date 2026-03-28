@@ -22,7 +22,7 @@ jobs:
         run: pip install poetry
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --no-root
 
       - name: Run linter
         run: poetry run flake8 main.py --max-line-length=100 --ignore=E501,W503 --exit-zero
@@ -43,7 +43,7 @@ jobs:
         run: pip install poetry
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --no-root
 
       - name: Run syntax check
         run: python3 -c "import py_compile; py_compile.compile('main.py', doraise=True)"
