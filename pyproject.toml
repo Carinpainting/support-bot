@@ -1,0 +1,18 @@
+[project]
+name = "support-bot"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "vsyroc",email = "vsyroc@gmail.com"}
+]
+requires-python = ">=3.11"
+dependencies = [
+    "aiogram (==3.4.1)",
+    "aiohttp (==3.9.3)",
+    "python-dotenv (==1.0.1)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
