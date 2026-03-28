@@ -1,0 +1,88 @@
+name: Lint, Test & Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: Run linter
+        run: flake8 main.py --max-line-length=100 --ignore=E501,W503
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run syntax check
+        run: python3 -c "import py_compile; py_compile.compile('main.py', doraise=True)"
+
+      - name: Check imports
+        run: python3 -c "import aiogram; import aiohttp; print('OK')"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.95.82.252.141 }}
+          username: ${{ secrets.oreangepi }}
+          key: ${{ secrets.-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACB7Bg3kmyxJL8QJNjZvQ9bCefsBvR7uPTOyTAv1n/p3WAAAAKC21/0Bttf9
+AQAAAAtzc2gtZWQyNTUxOQAAACB7Bg3kmyxJL8QJNjZvQ9bCefsBvR7uPTOyTAv1n/p3WA
+AAAECRwDpcDCTWkDOTNWiNAVWhtaCZVs1jVAS6wBo8Yjqe63sGDeSbLEkvxAk2Nm9D1sJ5
++wG9Hu49M7JMC/Wf+ndYAAAAFm9yYW5nZXBpQG9yYW5nZXBpemVybzMBAgMEBQYH
+-----END OPENSSH PRIVATE KEY----- }}
+          port: ${{ secrets.2222 }}
+          script: |
+            cd /home/orangepi/support-bot
+
+            echo "=== Pulling latest code ==="
+            git pull origin main
+
+            echo "=== Installing dependencies ==="
+            source venv/bin/activate
+            pip install -r requirements.txt --quiet
+
+            echo "=== Restarting bot ==="
+            sudo /bin/systemctl restart support-bot
+
+            echo "=== Checking status ==="
+            sleep 3
+            sudo /bin/systemctl status support-bot --no-pager
+
+            echo "=== Deploy complete ==="
