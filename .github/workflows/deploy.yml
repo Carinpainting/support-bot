@@ -60,13 +60,7 @@ jobs:
         with:
           host: ${{ secrets.95.82.252.141 }}
           username: ${{ secrets.oreangepi }}
-          key: ${{ secrets.-----BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-QyNTUxOQAAACB7Bg3kmyxJL8QJNjZvQ9bCefsBvR7uPTOyTAv1n/p3WAAAAKC21/0Bttf9
-AQAAAAtzc2gtZWQyNTUxOQAAACB7Bg3kmyxJL8QJNjZvQ9bCefsBvR7uPTOyTAv1n/p3WA
-AAAECRwDpcDCTWkDOTNWiNAVWhtaCZVs1jVAS6wBo8Yjqe63sGDeSbLEkvxAk2Nm9D1sJ5
-+wG9Hu49M7JMC/Wf+ndYAAAAFm9yYW5nZXBpQG9yYW5nZXBpemVybzMBAgMEBQYH
------END OPENSSH PRIVATE KEY----- }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.2222 }}
           script: |
             cd /home/orangepi/support-bot
