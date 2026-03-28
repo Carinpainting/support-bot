@@ -23,7 +23,7 @@ TRELLO_LISTS = {
 TELEGRAM_ID_PREFIX = "TELEGRAM_USER_ID:"
 
 # ====== ИНИЦИАЛИЗАЦИЯ ======
-bot = Bot(token=BOT_TOKEN), proxy="https://t.me/proxy?server=p2.p.1.mtproto.ru&port=443&secret=ee2111222233334444555566667777888862726f777365722e79616e6465782e636f6d"
+bot = Bot(token=BOT_TOKEN, proxy="https://t.me/proxy?server=p2.p.1.mtproto.ru&port=443&secret=ee2111222233334444555566667777888862726f777365722e79616e6465782e636f6d")
 dp = Dispatcher()
 
 
