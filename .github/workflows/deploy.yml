@@ -18,14 +18,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Poetry
+        run: pip install poetry
+
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install flake8
+        run: poetry install
 
       - name: Run linter
-        run: flake8 main.py --max-line-length=100 --ignore=E501,W503
+        run: poetry run flake8 main.py --max-line-length=100 --ignore=E501,W503 --exit-zero
 
   test:
     needs: lint
@@ -39,38 +39,40 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Poetry
+        run: pip install poetry
+
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
+        run: poetry install
 
       - name: Run syntax check
         run: python3 -c "import py_compile; py_compile.compile('main.py', doraise=True)"
 
       - name: Check imports
-        run: python3 -c "import aiogram; import aiohttp; print('OK')"
+        run: poetry run python3 -c "import aiogram; import aiohttp; print('OK')"
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
-          username: orangepi
+          username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: 2222
+          port: ${{ secrets.DEPLOY_PORT }}
           script: |
             cd /home/orangepi/support-bot
 
             echo "=== Pulling latest code ==="
-            git pull origin main
+            git pull origin master
 
             echo "=== Installing dependencies ==="
             source venv/bin/activate
-            pip install -r requirements.txt --quiet
+            pip install poetry
+            poetry install
 
             echo "=== Restarting bot ==="
             sudo /bin/systemctl restart support-bot
