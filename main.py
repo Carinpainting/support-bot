@@ -465,7 +465,6 @@ async def help_cmd(message: types.Message):
     )
 
 
-# ====== ЗАПУСК ======
 async def main():
     await dp.start_polling(bot)
 
