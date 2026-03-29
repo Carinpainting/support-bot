@@ -55,6 +55,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    environment: support-bot
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - name: Deploy via SSH
