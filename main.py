@@ -459,7 +459,7 @@ async def help_cmd(message: types.Message):
         "🟡 Средний — ошибки средней важности\n"
         "🔴 Высокий — критические проблемы\n\n"
         "Каждое обращение обрабатывается командой разработки.\n"
-        "Статус задачи можно отслеживать по ссылке в Trello.",
+        "Статус задачи можно отслеживать по ссылке в [Trello](https://trello.com/b/DGAgN8xC/support).",
         parse_mode="Markdown",
         reply_markup=main_keyboard(),
     )
