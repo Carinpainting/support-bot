@@ -75,7 +75,7 @@ jobs:
             git pull origin master
 
             echo "=== Installing dependencies ==="
-            source venv/bin/activate
+            source .venv/bin/activate
             pip install poetry
             poetry install
 
