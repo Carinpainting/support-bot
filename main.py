@@ -10,14 +10,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv("BOT_TOKEN") or "none"
 TRELLO_API_KEY = os.getenv("TRELLO_API_KEY")
 TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
 
 TRELLO_LISTS = {
-    "low":    os.getenv("TRELLO_LIST_LOW"),
+    "low": os.getenv("TRELLO_LIST_LOW"),
     "medium": os.getenv("TRELLO_LIST_MEDIUM"),
-    "high":   os.getenv("TRELLO_LIST_HIGH"),
+    "high": os.getenv("TRELLO_LIST_HIGH"),
 }
 
 TELEGRAM_ID_PREFIX = "TELEGRAM_USER_ID:"
@@ -144,9 +144,7 @@ async def create_trello_card(
 
         # 3. Прикрепляем картинку если есть
         if image_data and image_filename:
-            attach_url = (
-                f"https://api.trello.com/1/cards/{card_id}/attachments"
-            )
+            attach_url = f"https://api.trello.com/1/cards/{card_id}/attachments"
             attach_params = {
                 "key": TRELLO_API_KEY,
                 "token": TRELLO_TOKEN,
@@ -160,9 +158,7 @@ async def create_trello_card(
                 content_type="image/jpeg",
             )
 
-            async with session.post(
-                attach_url, params=attach_params, data=form
-            ):
+            async with session.post(attach_url, params=attach_params, data=form):
                 pass
 
     return card
@@ -197,6 +193,7 @@ async def get_user_cards(user_id: int) -> dict:
 
 # ====== ОБРАБОТЧИКИ БОТА ======
 
+
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message, state: FSMContext):
     await state.clear()
@@ -209,6 +206,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
 
 
 # ---- Создание задачи ----
+
 
 @dp.message(F.text == "📝 Новая задача")
 async def new_task(message: types.Message, state: FSMContext):
@@ -225,6 +223,7 @@ async def new_task(message: types.Message, state: FSMContext):
 
 # -- Отмена на любом шаге --
 
+
 @dp.message(TaskForm.waiting_for_title, F.text == "❌ Отмена")
 @dp.message(TaskForm.waiting_for_description, F.text == "❌ Отмена")
 @dp.message(TaskForm.waiting_for_image, F.text == "❌ Отмена")
@@ -235,6 +234,7 @@ async def cancel_any(message: types.Message, state: FSMContext):
 
 
 # -- Шаг 1: Заголовок --
+
 
 @dp.message(TaskForm.waiting_for_title)
 async def process_title(message: types.Message, state: FSMContext):
@@ -252,6 +252,7 @@ async def process_title(message: types.Message, state: FSMContext):
 
 # -- Шаг 2: Описание --
 
+
 @dp.message(TaskForm.waiting_for_description)
 async def process_description(message: types.Message, state: FSMContext):
     await state.update_data(task_description=message.text)
@@ -266,6 +267,7 @@ async def process_description(message: types.Message, state: FSMContext):
 
 
 # -- Шаг 3: Картинка (опционально) --
+
 
 @dp.message(TaskForm.waiting_for_image, F.text == "⏩ Пропустить")
 async def skip_image(message: types.Message, state: FSMContext):
@@ -310,6 +312,7 @@ async def wrong_image(message: types.Message):
 
 # -- Шаг 4: Приоритет и создание карточки --
 
+
 @dp.message(TaskForm.waiting_for_priority)
 async def process_priority(message: types.Message, state: FSMContext):
     priority_map = {
@@ -334,6 +337,7 @@ async def process_priority(message: types.Message, state: FSMContext):
     if image_file_id:
         file = await bot.get_file(image_file_id)
         from io import BytesIO
+
         buffer = BytesIO()
         await bot.download_file(file.file_path, buffer)
         image_data = buffer.getvalue()
@@ -381,8 +385,7 @@ async def process_priority(message: types.Message, state: FSMContext):
         )
     except Exception as e:
         await message.answer(
-            f"❌ Ошибка при создании задачи: {str(e)}\n"
-            f"Попробуйте позже.",
+            f"❌ Ошибка при создании задачи: {str(e)}\nПопробуйте позже.",
             reply_markup=main_keyboard(),
         )
 
@@ -390,6 +393,7 @@ async def process_priority(message: types.Message, state: FSMContext):
 
 
 # ---- Мои обращения ----
+
 
 @dp.message(F.text == "📋 Мои обращения")
 async def list_my_tasks(message: types.Message):
@@ -441,6 +445,7 @@ async def list_my_tasks(message: types.Message):
 
 
 # ---- Помощь ----
+
 
 @dp.message(F.text == "❓ Помощь")
 async def help_cmd(message: types.Message):
