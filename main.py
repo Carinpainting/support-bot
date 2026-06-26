@@ -8,6 +8,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 import os
 from dotenv import load_dotenv
 
+from aiogram.client.session.aiohttp import AiohttpSession
+
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN") or "none"
@@ -22,8 +24,13 @@ TRELLO_LISTS = {
 
 TELEGRAM_ID_PREFIX = "TELEGRAM_USER_ID:"
 
+PROXY_URL = os.getenv("PROXY_URL") or None
+
 # ====== ИНИЦИАЛИЗАЦИЯ ======
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(
+    token=BOT_TOKEN,
+    session=AiohttpSession(proxy=PROXY_URL) if PROXY_URL else None,
+)
 dp = Dispatcher()
 
 

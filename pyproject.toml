@@ -9,7 +9,8 @@ requires-python = ">=3.11"
 dependencies = [
     "aiogram (==3.4.1)",
     "aiohttp (==3.9.3)",
-    "python-dotenv (==1.0.1)"
+    "python-dotenv (==1.0.1)",
+    "aiohttp-socks (>=0.8,<0.9)"
 ]
 
 
